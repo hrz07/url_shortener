@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const shortnerSchema = new mongoose.Schema({
     shortId: {
         type: String,
@@ -30,3 +32,5 @@ const shortnerSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Shortner = mongoose.model('Shortner', shortnerSchema);
+
+module.exports = Shortner;

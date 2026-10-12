@@ -18,9 +18,10 @@
             color: var(--text-main);
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start; /* Changed from center to allow scrolling */
+            min-height: 100vh;
             margin: 0;
+            padding: 2rem 0;
         }
         .container {
             background-color: var(--surface);
@@ -28,7 +29,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             width: 100%;
-            max-width: 500px;
+            max-width: 600px; /* Made slightly wider to fit the table */
             text-align: center;
         }
         h1 {
@@ -89,6 +90,45 @@
         .result-card a:hover {
             text-decoration: underline;
         }
+
+        /* --- NEW STYLES FOR THE LIST --- */
+        .url-list-container {
+            margin-top: 3rem;
+            text-align: left;
+        }
+        .url-list-container h2 {
+            font-size: 1.2rem;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #E5E7EB;
+            text-align: left;
+        }
+        th {
+            background-color: #F9FAFB;
+            font-weight: 600;
+        }
+        td a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        td a:hover {
+            text-decoration: underline;
+        }
+        .original-url {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
@@ -96,22 +136,51 @@
     <div class="container">
         <h1>✂️ URL Shortener</h1>
         
-        <!-- The form sends a POST request to your Express server -->
         <form action="/" method="POST">
             <input 
                 type="url" 
-                name="fullUrl" 
+                name="redirectUrl" 
                 placeholder="Paste your long URL here (https://...)" 
                 required 
             />
             <button type="submit">Shorten Link</button>
         </form>
 
-        <!-- EJS Conditional: Only show this if the server passes a 'shortUrl' variable -->
         <% if (locals.shortUrl) { %>
             <div class="result-card">
                 <p>Success! Here is your shortened link:</p>
                 <a href="<%= shortUrl %>" target="_blank"><%= shortUrl %></a>
+            </div>
+        <% } %>
+
+        <!-- --- NEW LIST SECTION --- -->
+        <% if (locals.shortUrls && shortUrls.length > 0) { %>
+            <div class="url-list-container">
+                <h2>All Shortened Links</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Short Link</th>
+                            <th>Original Destination</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Loop through all the shortUrls passed from your controller -->
+                        <% shortUrls.forEach(url => { %>
+                            <tr>
+                                <!-- Adjust the href depending on how you construct the domain -->
+                                <td>
+                                    <a href="/<%= url.shortId %>" target="_blank">/<%= url.shortId %></a>
+                                </td>
+                                <td>
+                                    <div class="original-url" title="<%= url.redirectUrl %>">
+                                        <a href="<%= url.redirectUrl %>" target="_blank"><%= url.redirectUrl %></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
             </div>
         <% } %>
     </div>
