@@ -35,7 +35,7 @@ const createShortUrl = async (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     });
 
-  res.json({ 'shorturl': `${req.protocol}://${req.get('host')}/${shortId}` });
+  res.status(201).redirect('/');
 }
 
 
