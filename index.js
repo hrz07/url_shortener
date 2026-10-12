@@ -4,6 +4,7 @@ const { homeView } = require('./controllers/shortner.controller');
 const PORT = process.env.PORT || 3000;
 const shortenRoute = require('./routes/shorten.route');
 const loginRoute = require('./routes/login.route');
+const registerRoute = require('./routes/register.route');
 const mongoose = require('mongoose');
 
 
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json());
 app.use('/login', loginRoute);
+app.use('/register', registerRoute);
 app.use('/', shortenRoute);
 // MongoDB connect
 mongoose.connect('mongodb://127.0.0.1:27017/url_shortener')
