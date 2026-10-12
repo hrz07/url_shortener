@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 router.route('/').post((req, res) => {
-  res.send({ message: 'Shorten route is working!' });
+  res.json(req.body);
 });
 
 module.exports = router;
