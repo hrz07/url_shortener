@@ -10,7 +10,6 @@ const homeView = (req, res) => {
       console.error('Error fetching short URLs:', error);
       res.status(500).send('Internal Server Error');
     });
-  // res.render('home');
 }
 
 const createShortUrl = async (req, res) => {
