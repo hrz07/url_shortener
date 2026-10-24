@@ -14,6 +14,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    refreshTokenHash: {
+        type: String,
+        default: null,
+    },
+    previousRefreshTokenHash: {
+        type: String,
+        default: null,
+    },
+    refreshRotatedAt: {
+        type: Date,
+        default: null,
+    },
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

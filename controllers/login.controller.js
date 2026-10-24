@@ -1,5 +1,10 @@
 const User = require('../models/user.model');
-const jwt = require('jsonwebtoken');
+const {
+  hashToken,
+  signAccessToken,
+  signRefreshToken,
+  setAuthCookies,
+} = require('../utils/token');
 require('dotenv').config();
 
 const loginView = (req, res) => {
@@ -14,12 +19,13 @@ const handleLogin = async (req, res) => {
       return res.render('login', { error: 'Invalid email or password' });
     }
 
-    const token = jwt.sign({
-      userId: user._id,
-      email: user.email,
-      name: user.name
-    }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.cookie('token', token, { httpOnly: true });
+    const accessToken = signAccessToken(user);
+    const refreshToken = signRefreshToken(user);
+    user.refreshTokenHash = hashToken(refreshToken);
+    user.previousRefreshTokenHash = null;
+    user.refreshRotatedAt = null;
+    await user.save();
+    setAuthCookies(res, accessToken, refreshToken);
     return res.redirect('/');
   } catch (error) {
     console.error('Login error:', error);
