@@ -1,10 +1,13 @@
+require('dotenv').config();
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const app = express();
 const { homeView } = require('./controllers/shortner.controller');
 const PORT = process.env.PORT || 3000;
 const shortenRoute = require('./routes/shorten.route');
 const loginRoute = require('./routes/login.route');
 const registerRoute = require('./routes/register.route');
+const verifyToken = require('./middleware/auth.middleware');
 const mongoose = require('mongoose');
 
 
@@ -12,6 +15,8 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(express.json());
+app.use(cookieParser());
+app.use(verifyToken);
 app.use('/login', loginRoute);
 app.use('/register', registerRoute);
 app.use('/', shortenRoute);
